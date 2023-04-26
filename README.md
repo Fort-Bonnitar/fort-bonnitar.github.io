@@ -12,7 +12,7 @@
 <body style="text-align:center;">
 	<h1 style="color:green;">Tips, Tricks, and Documentation.</h1>
 	<p id="GFG_UP" style="font-size: 19px; font-weight: bold;"></p>
-	<a href="https://139-144-60-176.ip.linodeusercontent.com:3000/demos/butcher/index.html" style="color: green; font-size: 24px; font-weight: bold;">Documentation</a>
+	<iframe src="https://www.kali.org/blog/kali-linux-in-the-windows-app-store/" style="width: 80%; height: 500px; margin: auto;"></iframe>
 	<p id="GFG_DOWN" style="color: ; font-size: 24px; font-weight: bold;"></p>
 	<script>
 		var el_up = document.getElementById("GFG_UP");
