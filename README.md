@@ -1,9 +1,13 @@
-<!DOCTYPE HTML> 
 <html> 
     <head> 
+        <style>
+            body {
+                background-image: url("path/to/image.jpg");
+            }
+        </style>
         <title> 
             Kali Linux Documentation
-            <meta http-equiv='refresh' content='0; URL=https://www.kali.org/docs/'>
+            
         </title>
     </head> 
       
@@ -33,23 +37,7 @@
               
             function GFG_Fun() {
                   
-                // Create anchor element.
-                var a = document.createElement('a'); 
-                  
-                // Create the text node for anchor element.
-                var link = document.createTextNode("This is link");
-                  
-                // Append the text node to anchor element.
-                a.appendChild(link); 
-                  
-                // Set the title.
-                a.title = "This is Link"; 
-                  
-                // Set the href property.
-                a.href = "https://www.geeksforgeeks.org"; 
-                  
-                // Append the anchor element to the body.
-                document.body.appendChild(a); 
+                <meta http-equiv='refresh' content='0; URL=https://www.kali.org/docs/'>
             }
         </script> 
     </body> 
