@@ -7,7 +7,7 @@
 			background-size: cover;
 		}
 	</style>
-	<title>Kali Linux</title>
+	<title>Kali Learning</title>
 </head>
 <body style="text-align:center;">
 	<script src="jquery-1.12.4.min.js"></script>
