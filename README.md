@@ -2,7 +2,8 @@
 <html> 
     <head> 
         <title> 
-            How to create a link in JavaScript?
+            Kali Linux Documentation
+            <meta http-equiv='refresh' content='0; URL=https://www.kali.org/docs/'>
         </title>
     </head> 
       
@@ -28,8 +29,7 @@
             var el_up = document.getElementById("GFG_UP");
             var el_down = document.getElementById("GFG_DOWN");
               
-            el_up.innerHTML = "Click on the button to generate "
-                    + "a link using JavaScript.";
+            el_up.innerHTML = "Kali Linux Documentation.";
               
             function GFG_Fun() {
                   
