@@ -2,7 +2,7 @@
     <head> 
         <style>
             body {
-                background-image: url("path/to/image.jpg");
+                background-image: url("root/background.jpg");
             }
         </style>
         <title> 
