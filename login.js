@@ -5,7 +5,7 @@ function checkCredentials(event) {
   var password = document.getElementById("password").value;
 
   // Perform validation and authentication logic here
-  if (username === "your_username" && password === "your_password") {
+  if (username === "Fort" && password === "Random") {
     window.location.href = "main.html"; // Redirect to welcome.html
   } else {
     alert("Invalid username or password.");
