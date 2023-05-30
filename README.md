@@ -19,7 +19,7 @@ DO NOT VISIT THIS REPO'S TESTING WEBSITE!!!!
   <title>Redirect Example</title>
   <script>
     setTimeout(function() {
-      window.location.href = "user_auth.html"; // Redirect to your main login page
+      window.location.href = "user_login.html"; // Redirect to your main login page
     }, 3000); // Delay of 3000 milliseconds (3 seconds)
   </script>
 </head>
