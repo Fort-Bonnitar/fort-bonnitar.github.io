@@ -358,21 +358,21 @@
             <h3>Part A: Creating the Cover Query</h3>
             <ol class="task-list">
                 <li>
-                    <strong>Create `EQS_FindCover` Asset:</strong>
-                    <p>Create a new EQS query named `EQS_FindCover`. This will find a point that is hidden from the player.</p>
+                    <strong>Create <code class="code-block" style="display: inline-block; padding: 2px 5px;">EQS_FindCover<code/> Asset:</strong>
+                    <p>Create a new EQS query named <code class="code-block" style="display: inline-block; padding: 2px 5px;">EQS_FindCover<code/>. This will find a point that is hidden from the player.</p>
                 </li>
                 <li>
                     <strong>Configure Generator and Tests:</strong>
                     <ul>
-                        <li><strong>Generator:</strong> `Points: On Circle`. Radius ~2000.</li>
+                        <li><strong>Generator:</strong> <code class="code-block" style="display: inline-block; padding: 2px 5px;">Points: On Circle<code/>. Radius ~2000.</li>
                         <li><strong>Test 1: Trace.</strong> This is the most important test. We want to find a point that does <strong>not</strong> have line of sight to the player.
                             <ul>
                                 <li>Set <strong>Context</strong> to "Items" (the generated points).</li>
-                                <li>Set <strong>Trace To</strong> to a context referencing the Player. You'll need to create a new Blackboard key for the EQS to get this context. In `BB_Enemy`, create a new key named `PlayerActor_EQSContext` of type Actor. In the `BTS_CheckForPlayer` service, set this key at the same time you set `TargetActor`.</li>
-                                <li>In the Trace test, set <strong>Test Purpose</strong> to `Filter Only` and enable <strong>Invert</strong>. This will discard any points that CAN see the player.</li>
+                                <li>Set <strong>Trace To</strong> to a context referencing the Player. You'll need to create a new Blackboard key for the EQS to get this context. In <code class="code-block" style="display: inline-block; padding: 2px 5px;">BB_Enemy<code/>, create a new key named <code class="code-block" style="display: inline-block; padding: 2px 5px;">PlayerActor_EQSContext<code/> of type Actor. In the <code class="code-block" style="display: inline-block; padding: 2px 5px;">BTS_CheckForPlayer<code/> service, set this key at the same time you set <code class="code-block" style="display: inline-block; padding: 2px 5px;">TargetActor<code/>.</li>
+                                <li>In the Trace test, set <strong>Test Purpose</strong> to <code class="code-block" style="display: inline-block; padding: 2px 5px;">Filter Only<code/> and enable <strong>Invert</strong>. This will discard any points that CAN see the player.</li>
                             </ul>
                         </li>
-                        <li><strong>Test 2: Distance.</strong> Set this to score points that are a medium distance from the `PlayerActor_EQSContext` higher. We don't want to hide right next to the player or too far away.</li>
+                        <li><strong>Test 2: Distance.</strong> Set this to score points that are a medium distance from the <code class="code-block" style="display: inline-block; padding: 2px 5px;">PlayerActor_EQSContext<code/> higher. We don't want to hide right next to the player or too far away.</li>
                         <li><strong>Test 3: Pathfinding.</strong> As always, ensure the AI can reach the point.</li>
                     </ul>
                 </li>
