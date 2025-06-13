@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fortbonnitar's Unreal Engine Forge</title>
+    <title>Fortbonnitar's Unreal Workshop=</title>
     
     <!-- Google Fonts: Poppins for headings, Roboto for body -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,6 +30,10 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
@@ -119,6 +123,8 @@
             font-weight: 600;
             font-family: 'Poppins', sans-serif;
             transition: background-color 0.3s ease, transform 0.3s ease;
+            border: none;
+            cursor: pointer;
         }
 
         .cta-button:hover {
@@ -139,7 +145,6 @@
             position: relative;
         }
         
-        /* Underline effect for section titles */
         .section-title::after {
             content: '';
             display: block;
@@ -179,92 +184,87 @@
             border-bottom: 1px solid var(--border-color);
         }
         
-        /* Specific images for cards */
         .img-ai { background-image: url('https://images.unsplash.com/photo-1599058917212-d750089bc07e?q=80&w=1200&auto=format&fit=crop'); }
         .img-vfx { background-image: url('https://images.unsplash.com/photo-1620712943543-2858200f745a?q=80&w=1200&auto=format&fit=crop'); }
         .img-materials { background-image: url('https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=1200&auto=format&fit=crop'); }
         .img-placeholder { background-color: #333; display:flex; align-items:center; justify-content: center; color: var(--text-muted-color); font-size: 2rem;}
 
-        .card-content {
-            padding: 25px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-content h3 {
-            font-size: 1.4rem;
-            margin-bottom: 10px;
-        }
-
-        .card-content p {
-            color: var(--text-muted-color);
-            margin-bottom: 20px;
-            flex-grow: 1; /* Pushes tags and button to the bottom */
-        }
-
-        .card-tags {
-            margin-bottom: 20px;
-        }
-
-        .tag {
-            display: inline-block;
-            background-color: var(--border-color);
-            color: var(--text-color);
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.8rem;
-            margin-right: 5px;
-            margin-bottom: 5px;
-        }
-        
-        .tag .fa-solid {
-            margin-right: 5px;
-        }
-
+        .card-content { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-content h3 { font-size: 1.4rem; margin-bottom: 10px; }
+        .card-content p { color: var(--text-muted-color); margin-bottom: 20px; flex-grow: 1; }
+        .card-tags { margin-bottom: 20px; }
+        .tag { display: inline-block; background-color: var(--border-color); color: var(--text-color); padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; margin-right: 5px; margin-bottom: 5px; }
+        .tag .fa-solid { margin-right: 5px; }
         .tag.intermediate { background-color: #c67527; color: #fff; }
         .tag.beginner { background-color: #3a8a48; color: #fff; }
         .tag.advanced { background-color: #b03434; color: #fff; }
+        .card-link { display: block; background-color: transparent; border: 2px solid var(--primary-color); color: var(--primary-color); padding: 10px; border-radius: 8px; text-align: center; font-weight: 500; transition: background-color 0.3s ease, color 0.3s ease; }
+        .card-link:hover { background-color: var(--primary-color); color: #fff; }
 
-        .card-link {
-            display: block;
-            background-color: transparent;
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            padding: 10px;
-            border-radius: 8px;
+        /* --- NEW: Suggestion Section --- */
+        .suggestion-section {
+            background-color: var(--surface-color);
+            padding: 80px 0;
+            margin-top: 80px;
+        }
+
+        .suggestion-section p {
+            max-width: 700px;
+            margin: -20px auto 30px auto;
             text-align: center;
-            font-weight: 500;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            color: var(--text-muted-color);
         }
 
-        .card-link:hover {
-            background-color: var(--primary-color);
-            color: #fff;
+        .suggestion-form {
+            max-width: 700px;
+            margin: 0 auto;
         }
 
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .suggestion-form input,
+        .suggestion-form textarea {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .suggestion-form input:focus,
+        .suggestion-form textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 170, 255, 0.2);
+        }
+
+        .suggestion-form ::placeholder {
+            color: var(--text-muted-color);
+            opacity: 1;
+        }
+        
         /* --- Footer --- */
         .site-footer {
             text-align: center;
             padding: 40px 20px;
-            margin-top: 60px;
+            margin-top: 0; /* Changed from 60px */
             border-top: 1px solid var(--border-color);
             color: var(--text-muted-color);
         }
 
         /* --- Responsive Design --- */
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            .hero p {
-                font-size: 1rem;
-            }
-            .section-title {
-                font-size: 2rem;
-            }
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1rem; }
+            .section-title { font-size: 2rem; }
+            .suggestion-form .cta-button { width: 100%; }
         }
-
     </style>
 </head>
 <body>
@@ -273,19 +273,17 @@
         <div class="container">
             <div class="logo">
                 <i class="fa-solid fa-cube icon"></i>
-                Fortbonnitar
+                Fortbonnitar's Unreal Workshop
             </div>
-            <nav>
-                <!-- Future nav links can go here, e.g., About, Contact -->
-            </nav>
+            <nav></nav>
         </div>
     </header>
 
     <main>
         <section class="hero">
             <div class="container">
-                <h1>Welcome!<span class="highlight"></span></h1>
-                <p>Unreal Engine with clear, practical, and in-depth lesson plans. From beginner concepts to advanced systems. Live classes on Discord. Learning Unreal made simple.</p>
+                <h1>Welcome to the <span class="highlight">Workshop</span></h1>
+                <p>Learn Unreal Engine live with clear, practical, and in-depth lesson plans. From beginner concepts to advanced systems, let's build something incredible together.</p>
                 <a href="#lessons" class="cta-button">Explore Lessons</a>
             </div>
         </section>
@@ -293,78 +291,105 @@
         <section class="main-content" id="lessons">
             <div class="container">
                 <h2 class="section-title">Course Library</h2>
-
                 <div class="lesson-grid">
-
-                    <!-- 
-                        LESSON CARD TEMPLATE - START 
-                        To add a new lesson, copy this entire 'lesson-card' div block and paste it below.
-                        - Change the href="" to point to your new HTML file (e.g., "lesson-niagara.html").
-                        - Update the image class (or add a new one in the CSS).
-                        - Update the Title, Description, and Tags.
-                    -->
                     <div class="lesson-card">
                         <div class="card-image img-ai"></div>
+						
+						
                         <div class="card-content">
                             <h3>AI with Behavior Trees & EQS</h3>
-                            <p>Creating AI Using Unreal's Behavior Tree and Environment Query Systems.</p>
+                            <p>Unreal Engine with clear, practical, and in-depth lesson plans. From beginner concepts to advanced systems. Live classes on Discord. Learning Unreal made simple.</p>
                             <div class="card-tags">
                                 <span class="tag intermediate"><i class="fa-solid fa-brain"></i> AI</span>
                                 <span class="tag"><i class="fa-solid fa-diagram-project"></i> Blueprints</span>
                             </div>
-                            <a href="BT_EQS.html" class="card-link">View Lesson Plan</a>
+                            <a href="lesson-behavior-trees.html" class="card-link">View Lesson Plan</a>
                         </div>
                     </div>
-                    <!-- LESSON CARD TEMPLATE - END -->
-
+					
                     <div class="lesson-card">
                         <div class="card-image img-vfx"></div>
                         <div class="card-content">
-                            <h3>Create an Escape Room in Under 60 Minutes</h3>
-                            <p>Creating a basic escape room template in under 60 minutes.</p></p>
+                            <h3>Intro to Niagara VFX</h3>
+                            <p>Learn the fundamentals of creating visual effects with Unreal Engine's Niagara system.</p>
                             <div class="card-tags">
-                                <span class="tag beginner"><i class="fa-solid fa-wand-magic-sparkles"></i>Projects</span>
-                                <span class="tag"><i class="fa-solid fa-diagram-project"></i>Templates</span>
+                                <span class="tag beginner"><i class="fa-solid fa-wand-magic-sparkles"></i> VFX</span>
+                                <span class="tag"><i class="fa-solid fa-diagram-project"></i> Niagara Systems</span>
                             </div>
                             <a href="#" class="card-link">Coming Soon</a>
                         </div>
                     </div>
-
+					
                     <div class="lesson-card">
                         <div class="card-image img-materials"></div>
                         <div class="card-content">
-                            <h3>Advanced Materials</h3>
-                            <p>Learn how to create easy-to-use optimised and dynamic master materials.</p>
+                            <h3>Making Master Materials</h3>
+                            <p>Go beyond basic materials and explore how to make an easy-to-use dynamic master materials and how they are useful for more optimal rendering.</p>
                             <div class="card-tags">
                                 <span class="tag advanced"><i class="fa-solid fa-palette"></i> Materials</span>
-                                <span class="tag"><i class="fa-solid fa-code"></i>Instances</span>
+                                <span class="tag"><i class="fa-solid fa-code"></i> Instances</span>
                             </div>
-                            <a href="#" class="card-link">Coming Soon!</a>
+                            <a href="#" class="card-link">Coming Soon</a>
                         </div>
                     </div>
-                    
+					
+					
                     <div class="lesson-card">
                         <div class="card-image img-placeholder"><i class="fa-solid fa-gamepad"></i></div>
                         <div class="card-content">
-                            <h3>Intro to Niagara VFX</h3>
-                            <p>Learn the fundamentals of creating stunning visual effects from scratch with Unreal Engine 5's Niagara system.</p>
+                            <h3>Future Lesson Plan</h3>
+                            <p>Feedback and suggestions on topics that the community would like to be covered are crutial to a great workshop. Feel free to submit a form in the suggestions section for future topics you want to see.</p>
                             <div class="card-tags">
-                                <span class="tag beginner"><i class="fa-solid fa-star"></i>VFX</span>
-                                <span class="tag"><i class="fa-solid fa-puzzle-piece"></i>Niagara</span>
+                                <span class="tag beginner"><i class="fa-solid fa-star"></i> Future Topic</span>
+                                <span class="tag"><i class="fa-solid fa-puzzle-piece"></i> From Community Suggestions</span>
                             </div>
-                            <a href="#" class="card-link">Coming Soon!</a>
+							
+							
+                            <a href="#" class="card-link">Coming Soon</a>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </section>
+
+        <section class="suggestion-section" id="suggest">
+            <div class="container">
+                <h2 class="section-title">Suggest Topics & Ask Questions</h2>
+                <p>Have an idea for a lesson, have a question, or want to provide valuable feedback about the content? Use this form to send me your thoughts. I read every submission!</p>
+                
+				<form
+				  action="https://formspree.io/f/xeokgbjk"
+				  method="POST"
+				>
+				  <label>
+					* All Fields Are Optional.
+				  </label>
+				  <label>
+					Discord Username:
+					<textarea name="Discord Username:"></textarea>
+				  </label>
+				  <label>
+					Questions:
+					<textarea name="Questions:"></textarea>
+				  </label>
+				  <label>
+					Suggested Topics:
+					<textarea name="Suggested Topics:"></textarea>
+				  </label>
+				  <label>
+					Feedback:
+					<textarea name="Feedback:"></textarea>
+				  </label>
+				  <button type="submit">Submit</button>
+				</form>
+				
+            </div>
+        </section>
+
     </main>
 
     <footer class="site-footer">
-        <p>&copy; 2025 Fortbonnitar. All Rights Reserved.</p>
-        <!-- Add social media links here if desired -->
+        <p>&copy; 2025 Fortbonnitar's Unreal Engine Forge. All Rights Reserved.</p>
     </footer>
 
 </body>
