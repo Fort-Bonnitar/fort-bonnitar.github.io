@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suggestions & Feedback | Fortbonnitar's Unreal Workshop</title>
+    
+    <!-- Google Fonts & Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+
+    <style>
+        /* This contains all the necessary styles from the homepage */
+        :root {
+            --bg-color: #121212;
+            --surface-color: #1e1e1e;
+            --primary-color: #00aaff;
+            --primary-hover-color: #0088cc;
+            --text-color: #e0e0e0;
+            --text-muted-color: #888;
+            --border-color: #333;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Roboto', sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.7; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; font-weight: 700; line-height: 1.2; color: #fff; }
+        a { color: var(--primary-color); text-decoration: none; transition: color 0.3s ease; }
+        a:hover { color: var(--primary-hover-color); }
+        .site-header { padding: 20px 0; border-bottom: 1px solid var(--border-color); }
+        .site-header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Poppins', sans-serif; font-size: 1.8em; font-weight: 700; }
+        .logo .icon { color: var(--primary-color); margin-right: 10px; }
+        .main-content { padding: 80px 0; }
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 15px; position: relative; } /* Reduced bottom margin */
+        .section-title::after { content: ''; display: block; width: 80px; height: 4px; background: var(--primary-color); margin: 15px auto 0; border-radius: 2px; }
+        .page-description { max-width: 700px; margin: 0 auto 50px auto; text-align: center; color: var(--text-muted-color); }
+        
+        /* Form Specific Styles */
+        .suggestion-form { max-width: 700px; margin: 0 auto; }
+        .form-group { margin-bottom: 25px; }
+        .suggestion-form label {
+            display: block;
+            margin-bottom: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-color);
+        }
+        .suggestion-form textarea {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
+            min-height: 120px;
+            resize: vertical;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .suggestion-form textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 170, 255, 0.2);
+        }
+        .suggestion-form .form-note {
+            font-size: 0.9rem;
+            color: var(--text-muted-color);
+            margin-bottom: 30px;
+        }
+        .submit-button { display: inline-block; background-color: var(--primary-color); color: #fff; padding: 15px 30px; border-radius: 50px; font-weight: 600; font-family: 'Poppins', sans-serif; transition: background-color 0.3s ease, transform 0.3s ease; border: none; cursor: pointer; width: 100%; font-size: 1.1rem; }
+        .submit-button:hover { background-color: var(--primary-hover-color); color: #fff; transform: translateY(-3px); }
+
+        .site-footer { text-align: center; padding: 40px 20px; margin-top: 80px; border-top: 1px solid var(--border-color); color: var(--text-muted-color); }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="logo"><i class="fa-solid fa-cube icon"></i> Fortbonnitar's Unreal Workshop</a>
+            <nav>
+                 <a href="index.html#lessons">Back to Lessons</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <h2 class="section-title">Submit Feedback</h2>
+            <p class="page-description">Have an idea for a lesson, a question, or want to provide valuable feedback about the content? Use this form to send your thoughts. I read every submission!</p>
+            
+            <form class="suggestion-form" action="https://formspree.io/f/xeokgbjk" method="POST">
+                
+                <p class="form-note">* All fields are optional.</p>
+
+                <div class="form-group">
+                    <label for="discord-user">Discord Username</label>
+                    <textarea id="discord-user" name="Discord Username"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="questions">Questions</label>
+                    <textarea id="questions" name="Questions"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="topics">Suggested Topics</label>
+                    <textarea id="topics" name="Suggested Topics"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="feedback">General Feedback</label>
+                    <textarea id="feedback" name="Feedback"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="submit-button">Submit</button>
+                </div>
+
+            </form>
+
+        </div>
+    </main>
+
+    <footer class="site-footer" style="font-size: 0.9em; color: #661; margin-top: 2em; padding-top: 1em; border-top: 1px solid #ccc;">
+      <p>&copy; 2025 Fortbonnitar's Unreal Engine Forge. All Rights Reserved.</p>
+      <p><strong>Disclaimer:</strong> This site and its content are not affiliated with, sponsored by, or endorsed by Epic Games or Unreal Engine. Unreal Engine is a trademark of Epic Games, Inc. All other trademarks and content are property of their respective owners. This page is intended for educational use only.</p>
+    </footer>
+
+
+</body>
+</html>
