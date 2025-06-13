@@ -1,20 +1,396 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>AI Image Generator</title>
-    <link rel="stylesheet" href="style.css">
-    <meta name="Below is a link to " content="This is an AI Image Generator that uses StyleGAN to create artificial images. Click the button to run the Colab notebook and generate images.">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson Plan: UE AI with Behavior Trees & EQS</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .lesson-header {
+            text-align: center;
+            border-bottom: 2px solid #4A90E2;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .lesson-header h1 {
+            color: #2c3e50;
+            margin: 0;
+        }
+        .lesson-header p {
+            color: #555;
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+        .lesson-meta {
+            background-color: #eaf2f8;
+            border-left: 5px solid #4A90E2;
+            padding: 15px 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        .lesson-meta ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .lesson-meta li {
+            margin-bottom: 10px;
+        }
+        .lesson-meta strong {
+            color: #2c3e50;
+        }
+        .module {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .module h2 {
+            color: #4A90E2;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        h3 {
+            color: #34495e;
+        }
+        .code-block {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: "Fira Code", "Courier New", monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .important-note {
+            background-color: #fffbe6;
+            border-left: 5px solid #f0ad4e;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .task-list {
+            list-style-type: decimal;
+            padding-left: 20px;
+        }
+        .task-list li {
+            margin-bottom: 10px;
+        }
+        .task-list li strong {
+            display: block;
+            color: #333;
+        }
+        .task-list li p {
+            margin: 5px 0 0 0;
+            color: #555;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>AI Image Generator</h1>
-    </header>
 
-    <main>
-        <h1>Click the button to run the Colab notebook:</h1>
-        <a href="https://colab.research.google.com/drive/1l5lmaX_kXpATEZuiXmjSoBYcsZjN3vrT?authuser=0">
-            <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
-        </a>
-    </main>
+    <div class="container">
+        <!-- Main Lesson Header -->
+        <div class="lesson-header">
+            <h1>Unreal Engine AI: Mastering Behavior Trees & EQS with Blueprints</h1>
+            <p>A comprehensive guide to creating intelligent, dynamic, and environment-aware AI agents.</p>
+        </div>
+
+        <!-- Lesson Metadata -->
+        <div class="lesson-meta">
+            <ul>
+                <li><strong>Topic:</strong> Artificial Intelligence using Behavior Trees (BT) and Environment Query System (EQS).</li>
+                <li><strong>Engine Version:</strong> Unreal Engine 5.0+</li>
+                <li><strong>Target Audience:</strong> Intermediate UE developers.</li>
+                <li><strong>Prerequisites:</strong>
+                    <ul>
+                        <li>Basic understanding of the Unreal Engine editor.</li>
+                        <li>Proficiency with Blueprints (Actors, Components, Variables, Functions).</li>
+                        <li>Familiarity with creating a simple Character and Player Controller.</li>
+                    </ul>
+                </li>
+                <li><strong>Estimated Duration:</strong> 3 - 4 hours.</li>
+            </ul>
+        </div>
+
+        <!-- Learning Objectives -->
+        <div class="module">
+            <h2>Learning Objectives</h2>
+            <p>By the end of this lesson, you will be able to:</p>
+            <ul>
+                <li>Understand the core concepts and architecture of Behavior Trees.</li>
+                <li>Create and structure a Behavior Tree with Composites, Decorators, and Tasks.</li>
+                <li>Use a Blackboard to store and retrieve AI memory (data).</li>
+                <li>Implement custom Blueprint Tasks and Decorators to extend AI functionality.</li>
+                <li>Grasp the purpose of the Environment Query System (EQS) for spatial reasoning.</li>
+                <li>Design, create, and test an EQS Query to find optimal locations.</li>
+                <li>Integrate EQS results into a Behavior Tree to drive intelligent decision-making.</li>
+            </ul>
+        </div>
+        
+        <!-- Module 1: Conceptual Foundations & Setup -->
+        <div class="module">
+            <h2>Module 1: Conceptual Foundations & Project Setup</h2>
+            <h3>Part A: Theory - The AI Trio</h3>
+            <p>We'll be working with three key components that work together:</p>
+            <ul>
+                <li><strong>AI Controller:</strong> The "pilot" of an AI pawn. It owns and executes the Behavior Tree.</li>
+                <li><strong>Behavior Tree (BT):</strong> The "brain" or "decision-making flowchart". It dictates what the AI should do and in what order, but doesn't store data.</li>
+                <li><strong>Blackboard (BB):</strong> The "memory" of the AI. A simple key-value data store used by the Behavior Tree to make decisions.</li>
+            </ul>
+            
+            <div class="important-note">
+                <strong>Key Analogy:</strong> A Behavior Tree is the recipe, the Blackboard holds the ingredients, and the AI Controller is the chef following the recipe.
+            </div>
+
+            <h3>Part B: Project Setup</h3>
+            <ol class="task-list">
+                <li>
+                    <strong>Create a Project:</strong>
+                    <p>Start with the Third Person template. This gives us a playable character and a simple environment to work in.</p>
+                </li>
+                <li>
+                    <strong>Create the AI Character:</strong>
+                    <p>Duplicate the <code class="code-block" style="display: inline-block; padding: 2px 5px;">BP_ThirdPersonCharacter</code> and rename it to <code class="code-block" style="display: inline-block; padding: 2px 5px;">BP_AI_Character</code>. Place one in the level.</p>
+                </li>
+                <li>
+                    <strong>Enable EQS:</strong>
+                    <p>EQS is a plugin! Go to <code class="code-block" style="display: inline-block; padding: 2px 5px;">Edit > Plugins</code>, search for "Environment Query System" and enable it. Restart the editor.</p>
+                </li>
+                 <li>
+                    <strong>Create Core AI Assets:</strong>
+                    <p>In the Content Browser, create a new folder called "AI". Inside, create the following assets:</p>
+                    <ul>
+                        <li><strong>Blueprint Class > AI Controller:</strong> Name it <code class="code-block" style="display: inline-block; padding: 2px 5px;">AIC_Enemy</code>.</li>
+                        <li><strong>Artificial Intelligence > Behavior Tree:</strong> Name it <code class="code-block" style="display: inline-block; padding: 2px 5px;">BT_Enemy</code>.</li>
+                        <li><strong>Artificial Intelligence > Blackboard:</strong> Name it <code class="code-block" style="display: inline-block; padding: 2px 5px;">BB_Enemy</code>.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Link the Assets:</strong>
+                    <p><strong>Step 1:</strong> Open <code class="code-block" style="display: inline-block; padding: 2px 5px;">BP_AI_Character</code>, select the top-level component (Self), and in the Details panel, set <code class="code-block" style="display: inline-block; padding: 2px 5px;">AI Controller Class</code> to your <code class="code-block" style="display: inline-block; padding: 2px 5px;">AIC_Enemy</code>.</p>
+                    <p><strong>Step 2:</strong> Open <code class="code-block" style="display: inline-block; padding: 2px 5px;">AIC_Enemy</code>. In its Event Graph, on <code class="code-block" style="display: inline-block; padding: 2px 5px;">Event On Possess</code>, add the nodes: <code class="code-block" style="display: inline-block; padding: 2px 5px;">Run Behavior Tree</code>. Select your <code class="code-block" style="display: inline-block; padding: 2px 5px;">BT_Enemy</code> as the asset.</p>
+                </li>
+            </ol>
+        </div>
+
+        <!-- Module 2: Building the Behavior Tree -->
+        <div class="module">
+            <h2>Module 2: The Brain - Building a Basic Behavior Tree</h2>
+            
+            <h3>Part A: The Blackboard (Memory)</h3>
+            <p>Open <code class="code-block" style="display: inline-block; padding: 2px 5px;">BB_Enemy</code>. This is where we define our AI's memory. Let's add two keys:</p>
+            <ol class="task-list">
+                <li>Click "New Key" and select <strong>Object</strong>. Name it <code class="code-block" style="display: inline-block; padding: 2px 5px;">TargetActor</code>. In its details, set the Base Class to "Actor".</li>
+                <li>Click "New Key" again and select <strong>Vector</strong>. Name it <code class="code-block" style="display: inline-block; padding: 2px 5px;">TargetLocation</code>.</li>
+            </ol>
+
+            <h3>Part B: The Behavior Tree Structure</h3>
+            <p>Open <code class="code-block" style="display: inline-block; padding: 2px 5px;">BT_Enemy</code>. Make sure its <code class="code-block" style="display: inline-block; padding: 2px 5px;">Blackboard Asset</code> is set to <code class="code-block" style="display: inline-block; padding: 2px 5px;">BB_Enemy</code> in the Details panel.</p>
+            
+            <p>BTs flow from the <strong>Root</strong>, down and left-to-right.</p>
+            <ul>
+                <li><strong>Composites:</strong> Nodes that control the flow (e.g., Selector, Sequence).</li>
+                <li><strong>Tasks:</strong> The actions the AI performs (e.g., Move To, Wait).</li>
+                <li><strong>Decorators:</strong> Conditional checks that allow or block a branch from running.</li>
+            </ul>
+
+            <ol class="task-list">
+                <li>
+                    <strong>Create a Selector:</strong>
+                    <p>Drag from the Root and add a <code class="code-block" style="display: inline-block; padding: 2px 5px;">Selector</code> node. A Selector tries each child from left to right and stops as soon as one succeeds. This is perfect for "either-or" logic (e.g., "Attack Player OR Patrol").</p>
+                </li>
+                <li>
+                    <strong>Create a Patrol Sequence:</strong>
+                    <p>Drag from the <code class="code-block" style="display: inline-block; padding: 2px 5px;">Selector</code> (on the right side) and add a <code class="code-block" style="display: inline-block; padding: 2px 5px;">Sequence</code> node. A Sequence executes all its children from left to right and fails if any one of them fails. This is for step-by-step actions.</p>
+                </li>
+                <li>
+                    <strong>Build the Patrol Logic:</strong>
+                    <p>From the <code class="code-block" style="display: inline-block; padding: 2px 5px;">Sequence</code>, add the following built-in tasks:</p>
+                    <ul>
+                        <li><strong>Task 1:</strong> <code class="code-block" style="display: inline-block; padding: 2px 5px;">Move To</code>. In its Details, set the <code class="code-block" style="display: inline-block; padding: 2px 5px;">Blackboard Key</code> to our <code class="code-block" style="display: inline-block; padding: 2px 5px;">TargetLocation</code>.</li>
+                        <li><strong>Task 2:</strong> <code class="code-block" style="display: inline-block; padding: 2px 5px;">Wait</code>. Set duration to 2 seconds.</li>
+                    </ul>
+                </li>
+            </ol>
+            <div class="important-note">
+                At this point, our AI will try to move to a `TargetLocation` that is never set, so it won't do anything yet. That's our next step!
+            </div>
+        </div>
+        
+        <!-- Module 3: Custom Tasks & Services -->
+        <div class="module">
+            <h2>Module 3: Extending Functionality - Custom Tasks & Services</h2>
+            <h3>Part A: Creating a Custom Task</h3>
+            <p>Let's create a task to find a random location for our AI to patrol to.</p>
+            <ol class="task-list">
+                <li>
+                    <strong>Create a New Task Blueprint:</strong>
+                    <p>In the Behavior Tree editor, click "New Task" and choose <code class="code-block" style="display: inline-block; padding: 2px 5px;">BTTask_BlueprintBase</code>. Name it <code class="code-block" style="display: inline-block; padding: 2px 5px;">BTT_FindPatrolLocation</code>.</p>
+                </li>
+                <li>
+                    <strong>Implement the Task Logic:</strong>
+                    <p>In <code class="code-block" style="display: inline-block; padding: 2px 5px;">BTT_FindPatrolLocation</code>, override the function <code class="code-block" style="display: inline-block; padding: 2px 5px;">Receive Execute AI</code>. This event fires when the task runs.</p>
+                    <p>Here's the Blueprint logic:</p>
+                    <div class="code-block">
+[Event Receive Execute AI] -> [Get Controlled Pawn] -> [Get Actor Location] -> [Get Random Reachable Point In Radius]
+(Radius: 1000) -> [Set Blackboard Value as Vector] (Key Name: "TargetLocation") -> [Finish Execute] (Success: true)
+                    </div>
+                </li>
+                <li>
+                    <strong>Add the Task to the BT:</strong>
+                    <p>Go back to <code class="code-block" style="display: inline-block; padding: 2px 5px;">BT_Enemy</code>. Replace the <code class="code-block" style="display: inline-block; padding: 2px 5px;">Move To</code> task with your new <code class="code-block" style="display: inline-block; padding: 2px 5px;">BTT_FindPatrolLocation</code> task, then add the <code class="code-block" style="display: inline-block; padding: 2px 5px;">Move To</code> task after it. The sequence should now be: Find Location -> Move To Location -> Wait.</p>
+                </li>
+            </ol>
+            
+            <h3>Part B: Creating a Service to Find the Player</h3>
+            <p>A <strong>Service</strong> runs on a timer as long as its branch is active. It's perfect for perception checks, like looking for the player.</p>
+            <ol class="task-list">
+                 <li>
+                    <strong>Create a New Service Blueprint:</strong>
+                    <p>In the BT editor, right-click on the main <code class="code-block" style="display: inline-block; padding: 2px 5px;">Selector</code> node and choose <code class="code-block" style="display: inline-block; padding: 2px 5px;">Add Service > New Service</code>. Name it <code class="code-block" style="display: inline-block; padding: 2px 5px;">BTS_FindPlayer</code>.</p>
+                </li>
+                <li>
+                    <strong>Implement the Service Logic:</strong>
+                    <p>In <code class="code-block" style="display: inline-block; padding: 2px 5px;">BTS_FindPlayer</code>, override the function <code class="code-block" style="display: inline-block; padding: 2px 5px;">Receive Tick AI</code>. This fires periodically.</p>
+                    <p>Here's the Blueprint logic:</p>
+                    <div class="code-block">
+[Event Receive Tick AI] -> [Get Player Character] -> [Sphere Overlap Actors] (at AI's location, radius ~1500, Object Type: Pawn) 
+-> [For Each Loop]
+    -> [Cast to BP_ThirdPersonCharacter] (or your player character)
+        -> (On Success) [Set Blackboard Value as Object] (Key Name: "TargetActor", Value: The found player) -> [Break Loop]
+        -> (On Cast Failed) Continue loop
+-> (Loop Completed) If no player was found, we should clear the blackboard key:
+    -> [Clear Blackboard Value] (Key Name: "TargetActor")
+                    </div>
+                </li>
+            </ol>
+            <div class="important-note">
+                <strong>Test It!</strong> At this point, if you play the game and run near the AI, you should see the `TargetActor` key in the Blackboard get populated in the Behavior Tree debugger.
+            </div>
+        </div>
+
+        <!-- Module 4: The Environment Query System (EQS) -->
+        <div class="module">
+            <h2>Module 4: The Senses - Introduction to EQS</h2>
+            <p>EQS lets the AI ask questions about the environment, like "Where is the best place to hide?" or "Where is a good attack position?".</p>
+            <p>An EQS Query consists of:</p>
+            <ul>
+                <li><strong>Generators:</strong> Create a set of points to test (e.g., a grid of points around the AI).</li>
+                <li><strong>Tests:</strong> Score each point based on criteria (e.g., distance to player, visibility, pathability).</li>
+            </ul>
+
+            <h3>Part A: Creating an EQS Query</h3>
+            <ol class="task-list">
+                <li>
+                    <strong>Create the EQS Asset:</strong>
+                    <p>In your "AI" folder, right-click and choose <code class="code-block" style="display: inline-block; padding: 2px 5px;">Artificial Intelligence > Environment Query</code>. Name it <code class="code-block" style="display: inline-block; padding: 2px 5px;">EQS_FindCover</code>.</p>
+                </li>
+                <li>
+                    <strong>Add a Generator:</strong>
+                    <p>Open <code class="code-block" style="display: inline-block; padding: 2px 5px;">EQS_FindCover</code>. The root node is the Generator. Let's use <code class="code-block" style="display: inline-block; padding: 2px 5px;">Points: On Circle</code>. Set the Circle Radius to 2000 and the number of points to 32. This creates 32 potential spots in a ring around the AI.</p>
+                </li>
+                <li>
+                    <strong>Add Tests:</strong>
+                    <p>Right-click the Generator node to add tests. We'll add three:</p>
+                    <ul>
+                        <li><strong>Test 1: Distance.</strong> We want cover that's not too close or too far. Set <code class="code-block" style="display: inline-block; padding: 2px 5px;">Test Purpose</code> to <code class="code-block" style="display: inline-block; padding: 2px 5px;">Filter Only</code> and set a Min/Max distance (e.g., 500-1500).</li>
+                        <li><strong>Test 2: Trace.</strong> This checks for line of sight. We want to be HIDDEN from the player. Set the <code class="code-block" style="display: inline-block; padding: 2px 5px;">Context</code> to "Querier" (the AI) and the <code class="code-block" style="display: inline-block; padding: 2px 5px;">Trace To</code> context to your Player Character. Set <code class="code-block" style="display: inline-block; padding: 2px 5px;">Test Purpose</code> to <code class="code-block" style="display: inline-block; padding: 2px 5px;">Score Only</code> and invert the score (tick "Invert Score"). This makes hidden spots score higher.</li>
+                        <li><strong>Test 3: Pathfinding.</strong> Can I get there? This is crucial. This will automatically filter out any points the AI can't navigate to.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Test the Query:</strong>
+                    <p>Use the <code class="code-block" style="display: inline-block; padding: 2px 5px;">EQS Testing Pawn</code> in the editor toolbar. Place it in the level. In the EQS Editor, you can now see a live preview of your query. Blue spheres are good spots, red are bad. Adjust your parameters until it works as expected.</p>
+                </li>
+            </ol>
+        </div>
+        
+        <!-- Module 5: Integration -->
+        <div class="module">
+            <h2>Module 5: Putting It All Together - Integrating EQS with the BT</h2>
+            <p>Now we connect our advanced "senses" (EQS) to our "brain" (BT) to create intelligent behavior.</p>
+
+            <ol class="task-list">
+                <li>
+                    <strong>Create the "Flee to Cover" Branch:</strong>
+                    <p>In <code class="code-block" style="display: inline-block; padding: 2px 5px;">BT_Enemy</code>, add a new <code class="code-block" style="display: inline-block; padding: 2px 5px;">Sequence</code> to the LEFT of our patrol sequence. The Selector will now try this branch first.</p>
+                </li>
+                <li>
+                    <strong>Add a Decorator:</strong>
+                    <p>Right-click this new sequence and add a Decorator: <code class="code-block" style="display: inline-block; padding: 2px 5px;">Blackboard</code>. Configure it to check if <code class="code-block" style="display: inline-block; padding: 2px 5px;">TargetActor</code> "Is Set". This entire branch will only run if the AI has a target.</p>
+                </li>
+                <li>
+                    <strong>Run the EQS Query:</strong>
+                    <p>Inside the new sequence, add the built-in task <code class="code-block" style="display: inline-block; padding: 2px 5px;">Run EQS Query</code>.</p>
+                    <ul>
+                        <li>Set the <code class="code-block" style="display: inline-block; padding: 2px 5px;">Query Template</code> to your <code class="code-block" style="display: inline-block; padding: 2px 5px;">EQS_FindCover</code>.</li>
+                        <li>Set the <code class="code-block" style="display: inline-block; padding: 2px 5px;">Blackboard Key</code> to <code class="code-block" style="display: inline-block; padding: 2px 5px;">TargetLocation</code>.</li>
+                    </ul>
+                    <p>This task runs the query and saves the best result (the highest-scoring point) into our Blackboard key.</p>
+                </li>
+                <li>
+                    <strong>Move to the Cover Spot:</strong>
+                    <p>After the EQS task, add a <code class="code-block" style="display: inline-block; padding: 2px 5px;">Move To</code> task. Configure it to use the <code class="code-block" style="display: inline-block; padding: 2px 5px;">TargetLocation</code> key from the Blackboard.</p>
+                </li>
+                <li>
+                    <strong>Final Tree Structure:</strong>
+                    <p>Your tree should look something like this:</p>
+                    <div class="code-block">
+Root
+└── Selector
+    ├── Sequence (Flee to Cover)
+    │   ├── Decorator: Blackboard (TargetActor Is Set)
+    │   ├── Task: Run EQS Query (EQS_FindCover -> sets TargetLocation)
+    │   └── Task: Move To (TargetLocation)
+    └── Sequence (Patrol)
+        ├── Task: BTT_FindPatrolLocation (sets TargetLocation)
+        ├── Task: Move To (TargetLocation)
+        └── Task: Wait (2s)
+                    </div>
+                </li>
+            </ol>
+        </div>
+        
+        <!-- Conclusion & Challenge -->
+        <div class="module">
+            <h2>Conclusion & Challenge</h2>
+            <h3>Recap</h3>
+            <p>You have successfully created a moderately complex AI agent that can:</p>
+            <ul>
+                <li>Patrol idly when it has no target.</li>
+                <li>Detect the player using a periodic Service.</li>
+                <li>When it sees the player, it uses an EQS query to find the best nearby cover spot.</li>
+                <li>It then runs to that cover spot.</li>
+            </ul>
+            <p>This modular, data-driven approach is extremely powerful and scalable for creating complex AI in any game.</p>
+            
+            <h3>Challenge / Homework</h3>
+            <p>Extend the AI's behavior. Create an "Attack" branch in the Behavior Tree.</p>
+            <ol>
+                <li>Create a new EQS query: <code class="code-block" style="display: inline-block; padding: 2px 5px;">EQS_FindAttackPosition</code>. This query should find a point that is close to the player but still has line of sight.</li>
+                <li>Add a new sequence to your BT between the "Flee" and "Patrol" branches.</li>
+                <li>Add a Decorator to this new sequence to check a new Blackboard boolean variable called <code class="code-block" style="display: inline-block; padding: 2px 5px;">IsInCover</code>.</li>
+                <li>Create a custom task that fires a projectile or plays an attack animation.</li>
+                <li>The logic should be: If I see the player AND I'm not in cover, run to cover. If I see the player AND I AM in cover, find an attack spot and attack!</li>
+            </ol>
+        </div>
+    </div>
+
 </body>
 </html>
