@@ -233,164 +233,173 @@
             </div>
         </div>
         
-        <!-- Module 3: Custom Tasks & Services -->
+<!-- Module 3: The Senses - Introduction to Environment Query System (EQS) -->
         <div class="module">
-            <h2>Module 3: Extending Functionality - Custom Tasks & Services</h2>
-            <h3>Part A: Creating a Custom Task</h3>
-            <p>Let's create a task to find a random location for our AI to patrol to.</p>
-            <ol class="task-list">
-                <li>
-                    <strong>Create a New Task Blueprint:</strong>
-                    <p>In the Behavior Tree editor, click "New Task" and choose <code class="code-block" style="display: inline-block; padding: 2px 5px;">BTTask_BlueprintBase</code>. Name it <code class="code-block" style="display: inline-block; padding: 2px 5px;">BTT_FindPatrolLocation</code>.</p>
-                </li>
-                <li>
-                    <strong>Implement the Task Logic:</strong>
-                    <p>In <code class="code-block" style="display: inline-block; padding: 2px 5px;">BTT_FindPatrolLocation</code>, override the function <code class="code-block" style="display: inline-block; padding: 2px 5px;">Receive Execute AI</code>. This event fires when the task runs.</p>
-                    <p>Here's the Blueprint logic:</p>
-                    <div class="code-block">
-[Event Receive Execute AI] -> [Get Controlled Pawn] -> [Get Actor Location] -> [Get Random Reachable Point In Radius]
-(Radius: 1000) -> [Set Blackboard Value as Vector] (Key Name: "TargetLocation") -> [Finish Execute] (Success: true)
-                    </div>
-                </li>
-                <li>
-                    <strong>Add the Task to the BT:</strong>
-                    <p>Go back to <code class="code-block" style="display: inline-block; padding: 2px 5px;">BT_Enemy</code>. Replace the <code class="code-block" style="display: inline-block; padding: 2px 5px;">Move To</code> task with your new <code class="code-block" style="display: inline-block; padding: 2px 5px;">BTT_FindPatrolLocation</code> task, then add the <code class="code-block" style="display: inline-block; padding: 2px 5px;">Move To</code> task after it. The sequence should now be: Find Location -> Move To Location -> Wait.</p>
-                </li>
-            </ol>
-            
-            <h3>Part B: Creating a Service to Find the Player</h3>
-            <p>A <strong>Service</strong> runs on a timer as long as its branch is active. It's perfect for perception checks, like looking for the player.</p>
-            <ol class="task-list">
-                 <li>
-                    <strong>Create a New Service Blueprint:</strong>
-                    <p>In the BT editor, right-click on the main <code class="code-block" style="display: inline-block; padding: 2px 5px;">Selector</code> node and choose <code class="code-block" style="display: inline-block; padding: 2px 5px;">Add Service > New Service</code>. Name it <code class="code-block" style="display: inline-block; padding: 2px 5px;">BTS_FindPlayer</code>.</p>
-                </li>
-                <li>
-                    <strong>Implement the Service Logic:</strong>
-                    <p>In <code class="code-block" style="display: inline-block; padding: 2px 5px;">BTS_FindPlayer</code>, override the function <code class="code-block" style="display: inline-block; padding: 2px 5px;">Receive Tick AI</code>. This fires periodically.</p>
-                    <p>Here's the Blueprint logic:</p>
-                    <div class="code-block">
-[Event Receive Tick AI] -> [Get Player Character] -> [Sphere Overlap Actors] (at AI's location, radius ~1500, Object Type: Pawn) 
--> [For Each Loop]
-    -> [Cast to BP_ThirdPersonCharacter] (or your player character)
-        -> (On Success) [Set Blackboard Value as Object] (Key Name: "TargetActor", Value: The found player) -> [Break Loop]
-        -> (On Cast Failed) Continue loop
--> (Loop Completed) If no player was found, we should clear the blackboard key:
-    -> [Clear Blackboard Value] (Key Name: "TargetActor")
-                    </div>
-                </li>
-            </ol>
-            <div class="important-note">
-                <strong>Test It!</strong> At this point, if you play the game and run near the AI, you should see the `TargetActor` key in the Blackboard get populated in the Behavior Tree debugger.
-            </div>
-        </div>
-
-        <!-- Module 4: The Environment Query System (EQS) -->
-        <div class="module">
-            <h2>Module 4: The Senses - Introduction to EQS</h2>
-            <p>EQS lets the AI ask questions about the environment, like "Where is the best place to hide?" or "Where is a good attack position?".</p>
+            <h2>Module 3: The Senses - Introduction to Environment Query System (EQS)</h2>
+            <p>Instead of creating custom Blueprint tasks or services for every spatial query, we will use Unreal's built-in, powerful **Environment Query System (EQS)**. This is the modern, data-driven way to have AI perceive and understand the world.</p>
             <p>An EQS Query consists of:</p>
             <ul>
-                <li><strong>Generators:</strong> Create a set of points to test (e.g., a grid of points around the AI).</li>
-                <li><strong>Tests:</strong> Score each point based on criteria (e.g., distance to player, visibility, pathability).</li>
+                <li><strong>Generators:</strong> Create a set of potential points or actors to test.</li>
+                <li><strong>Tests:</strong> Score or filter those items based on criteria (distance, visibility, etc.).</li>
             </ul>
 
-            <h3>Part A: Creating an EQS Query</h3>
+            <h3>Part A: Creating a Patrol Query</h3>
+            <p>First, we'll replace the custom `BTT_FindPatrolLocation` task with a reusable EQS query.</p>
             <ol class="task-list">
                 <li>
                     <strong>Create the EQS Asset:</strong>
-                    <p>In your "AI" folder, right-click and choose <code class="code-block" style="display: inline-block; padding: 2px 5px;">Artificial Intelligence > Environment Query</code>. Name it <code class="code-block" style="display: inline-block; padding: 2px 5px;">EQS_FindCover</code>.</p>
+                    <p>In your "AI" folder, right-click and choose <code class="code-block" style="display: inline-block; padding: 2px 5px;">Artificial Intelligence > Environment Query</code>. Name it <code class="code-block" style="display: inline-block; padding: 2px 5px;">EQS_FindRandomPatrolPoint</code>.</p>
                 </li>
                 <li>
                     <strong>Add a Generator:</strong>
-                    <p>Open <code class="code-block" style="display: inline-block; padding: 2px 5px;">EQS_FindCover</code>. The root node is the Generator. Let's use <code class="code-block" style="display: inline-block; padding: 2px 5px;">Points: On Circle</code>. Set the Circle Radius to 2000 and the number of points to 32. This creates 32 potential spots in a ring around the AI.</p>
+                    <p>Open the new query. The root node is the Generator. Choose <code class="code-block" style="display: inline-block; padding: 2px 5px;">Points: On Circle</code>. This will generate test points in a ring around the AI (the "Querier"). Set the <strong>Circle Radius</strong> to 1500 and <strong>Points on Circle</strong> to 16.</p>
+                </li>
+                <li>
+                    <strong>Add a Test:</strong>
+                    <p>Right-click the Generator and add a <code class="code-block" style="display: inline-block; padding: 2px 5px;">Pathfinding</code> test. This is crucial. It will automatically filter out any points the AI cannot navigate to, preventing it from getting stuck.</p>
+                </li>
+                 <li>
+                    <strong>Test the Query:</strong>
+                    <p>Use the <code class="code-block" style="display: inline-block; padding: 2px 5px;">EQS Testing Pawn</code> in the editor toolbar to preview your query in the level. You should see a ring of green spheres representing valid patrol points.</p>
+                </li>
+            </ol>
+            
+            <h3>Part B: Creating a Player Detection Query</h3>
+            <p>Next, we'll replace the simple Sphere Overlap service with a more robust EQS query for finding the player.</p>
+            <ol class="task-list">
+                 <li>
+                    <strong>Create the EQS Asset:</strong>
+                    <p>Create another EQS asset and name it <code class="code-block" style="display: inline-block; padding: 2px 5px;">EQS_FindPlayer</code>.</p>
+                </li>
+                <li>
+                    <strong>Add a Generator:</strong>
+                    <p>This time, for the Generator, choose <code class="code-block" style="display: inline-block; padding: 2px 5px;">Actors Of Class</code>. This generator finds actors directly instead of points.</p>
+                    <ul>
+                        <li>Set <strong>Searched Actor Class</strong> to your player character blueprint (e.g., <code class="code-block" style="display: inline-block; padding: 2px 5px;">BP_ThirdPersonCharacter</code>).</li>
+                        <li>Set <strong>Search Radius</strong> to 2000. This is our AI's "sight" range.</li>
+                    </ul>
                 </li>
                 <li>
                     <strong>Add Tests:</strong>
-                    <p>Right-click the Generator node to add tests. We'll add three:</p>
+                    <p>Add two tests to the generator:</p>
                     <ul>
-                        <li><strong>Test 1: Distance.</strong> We want cover that's not too close or too far. Set <code class="code-block" style="display: inline-block; padding: 2px 5px;">Test Purpose</code> to <code class="code-block" style="display: inline-block; padding: 2px 5px;">Filter Only</code> and set a Min/Max distance (e.g., 500-1500).</li>
-                        <li><strong>Test 2: Trace.</strong> This checks for line of sight. We want to be HIDDEN from the player. Set the <code class="code-block" style="display: inline-block; padding: 2px 5px;">Context</code> to "Querier" (the AI) and the <code class="code-block" style="display: inline-block; padding: 2px 5px;">Trace To</code> context to your Player Character. Set <code class="code-block" style="display: inline-block; padding: 2px 5px;">Test Purpose</code> to <code class="code-block" style="display: inline-block; padding: 2px 5px;">Score Only</code> and invert the score (tick "Invert Score"). This makes hidden spots score higher.</li>
-                        <li><strong>Test 3: Pathfinding.</strong> Can I get there? This is crucial. This will automatically filter out any points the AI can't navigate to.</li>
+                        <li><strong>Test 1: Distance.</strong> This is redundant with the search radius, but it's good practice. It scores closer targets higher.</li>
+                        <li><strong>Test 2: Trace.</strong> This checks for line of sight. Set <strong>Context</strong> to "Querier" (the AI) and <strong>Trace To</strong> to "Items" (the actors found by the generator). This ensures the AI can actually *see* the player and isn't targeting them through walls.</li>
                     </ul>
-                </li>
-                <li>
-                    <strong>Test the Query:</strong>
-                    <p>Use the <code class="code-block" style="display: inline-block; padding: 2px 5px;">EQS Testing Pawn</code> in the editor toolbar. Place it in the level. In the EQS Editor, you can now see a live preview of your query. Blue spheres are good spots, red are bad. Adjust your parameters until it works as expected.</p>
                 </li>
             </ol>
         </div>
-        
-        <!-- Module 5: Integration -->
-        <div class="module">
-            <h2>Module 5: Putting It All Together - Integrating EQS with the BT</h2>
-            <p>Now we connect our advanced "senses" (EQS) to our "brain" (BT) to create intelligent behavior.</p>
 
+        <!-- Module 4: Assembling the Behavior Tree with EQS -->
+        <div class="module">
+            <h2>Module 4: The Brain - Assembling the Behavior Tree with EQS</h2>
+            <p>Now that we have our "senses" (EQS Queries), we can build our AI's "brain" (Behavior Tree) to use them. This approach is much cleaner and more powerful.</p>
+
+            <h3>Part A: The Player-Sensing Service</h3>
+            <p>A <strong>Service</strong> is still the perfect tool to periodically run our perception query.</p>
             <ol class="task-list">
                 <li>
-                    <strong>Create the "Flee to Cover" Branch:</strong>
-                    <p>In <code class="code-block" style="display: inline-block; padding: 2px 5px;">BT_Enemy</code>, add a new <code class="code-block" style="display: inline-block; padding: 2px 5px;">Sequence</code> to the LEFT of our patrol sequence. The Selector will now try this branch first.</p>
+                    <strong>Create a New Service:</strong>
+                    <p>Open <code class="code-block" style="display: inline-block; padding: 2px 5px;">BT_Enemy</code>. Right-click the main <code class="code-block" style="display: inline-block; padding: 2px 5px;">Selector</code> node, choose <code class="code-block" style="display: inline-block; padding: 2px 5px;">Add Service > New Service</code>, and name it <code class="code-block" style="display: inline-block; padding: 2px 5px;">BTS_CheckForPlayer</code>.</p>
                 </li>
                 <li>
-                    <strong>Add a Decorator:</strong>
-                    <p>Right-click this new sequence and add a Decorator: <code class="code-block" style="display: inline-block; padding: 2px 5px;">Blackboard</code>. Configure it to check if <code class="code-block" style="display: inline-block; padding: 2px 5px;">TargetActor</code> "Is Set". This entire branch will only run if the AI has a target.</p>
-                </li>
-                <li>
-                    <strong>Run the EQS Query:</strong>
-                    <p>Inside the new sequence, add the built-in task <code class="code-block" style="display: inline-block; padding: 2px 5px;">Run EQS Query</code>.</p>
-                    <ul>
-                        <li>Set the <code class="code-block" style="display: inline-block; padding: 2px 5px;">Query Template</code> to your <code class="code-block" style="display: inline-block; padding: 2px 5px;">EQS_FindCover</code>.</li>
-                        <li>Set the <code class="code-block" style="display: inline-block; padding: 2px 5px;">Blackboard Key</code> to <code class="code-block" style="display: inline-block; padding: 2px 5px;">TargetLocation</code>.</li>
-                    </ul>
-                    <p>This task runs the query and saves the best result (the highest-scoring point) into our Blackboard key.</p>
-                </li>
-                <li>
-                    <strong>Move to the Cover Spot:</strong>
-                    <p>After the EQS task, add a <code class="code-block" style="display: inline-block; padding: 2px 5px;">Move To</code> task. Configure it to use the <code class="code-block" style="display: inline-block; padding: 2px 5px;">TargetLocation</code> key from the Blackboard.</p>
-                </li>
-                <li>
-                    <strong>Final Tree Structure:</strong>
-                    <p>Your tree should look something like this:</p>
+                    <strong>Implement the Service Logic:</strong>
+                    <p>In <code class="code-block" style="display: inline-block; padding: 2px 5px;">BTS_CheckForPlayer</code>, override <code class="code-block" style="display: inline-block; padding: 2px 5px;">Receive Tick AI</code>. Instead of doing overlaps, we will run our EQS query.</p>
                     <div class="code-block">
-Root
-└── Selector
-    ├── Sequence (Flee to Cover)
-    │   ├── Decorator: Blackboard (TargetActor Is Set)
-    │   ├── Task: Run EQS Query (EQS_FindCover -> sets TargetLocation)
-    │   └── Task: Move To (TargetLocation)
-    └── Sequence (Patrol)
-        ├── Task: BTT_FindPatrolLocation (sets TargetLocation)
-        ├── Task: Move To (TargetLocation)
-        └── Task: Wait (2s)
+<!-- This is a simplified representation of the blueprint graph -->
+[Event Receive Tick AI] -> [Run EQS Query]
+    (Query Template: EQS_FindPlayer, Run Mode: Single Best Item)
+    |
+    (OnQueryFinished Event) -> [Get Query Results as Actors] -> [Get (a copy) from array, index 0]
+    |
+    (Is Valid branch)
+    -> [True (Player Found)]: [Set Blackboard Value as Object] (Key: TargetActor, Value: The found actor)
+    -> [False (No Player)]: [Clear Blackboard Value] (Key: TargetActor)
+                    </div>
+                    <div class="important-note">
+                        <strong>Why This is Better:</strong> Our Service is now incredibly simple. All the complex logic for finding the player (distance, line of sight) is contained and visualized within the `EQS_FindPlayer` query itself, making it easy to debug and reuse.
                     </div>
                 </li>
             </ol>
-        </div>
-        
-        <!-- Conclusion & Challenge -->
-        <div class="module">
-            <h2>Conclusion & Challenge</h2>
-            <h3>Recap</h3>
-            <p>You have successfully created a moderately complex AI agent that can:</p>
-            <ul>
-                <li>Patrol idly when it has no target.</li>
-                <li>Detect the player using a periodic Service.</li>
-                <li>When it sees the player, it uses an EQS query to find the best nearby cover spot.</li>
-                <li>It then runs to that cover spot.</li>
-            </ul>
-            <p>This modular, data-driven approach is extremely powerful and scalable for creating complex AI in any game.</p>
             
-            <h3>Challenge / Homework</h3>
-            <p>Extend the AI's behavior. Create an "Attack" branch in the Behavior Tree.</p>
-            <ol>
-                <li>Create a new EQS query: <code class="code-block" style="display: inline-block; padding: 2px 5px;">EQS_FindAttackPosition</code>. This query should find a point that is close to the player but still has line of sight.</li>
-                <li>Add a new sequence to your BT between the "Flee" and "Patrol" branches.</li>
-                <li>Add a Decorator to this new sequence to check a new Blackboard boolean variable called <code class="code-block" style="display: inline-block; padding: 2px 5px;">IsInCover</code>.</li>
-                <li>Create a custom task that fires a projectile or plays an attack animation.</li>
-                <li>The logic should be: If I see the player AND I'm not in cover, run to cover. If I see the player AND I AM in cover, find an attack spot and attack!</li>
+            <h3>Part B: Building the Behavior Tree Logic</h3>
+            <p>With our perception service running, the Behavior Tree can now react to the `TargetActor` key.</p>
+            <ol class="task-list">
+                <li>
+                    <strong>Create the "Chase/Attack" Branch:</strong>
+                    <p>To the main `Selector`, add a `Sequence` node on the left. This will be our highest-priority behavior.</p>
+                    <ul>
+                        <li><strong>Decorator:</strong> Right-click the Sequence and add a <code class="code-block" style="display: inline-block; padding: 2px 5px;">Blackboard</code> decorator. Set it to observe `TargetActor` and check if it "Is Set". This branch will only run if the AI has a target.</li>
+                        <li><strong>Task 1:</strong> Add a <code class="code-block" style="display: inline-block; padding: 2px 5px;">Move To</code> task. In its details, set the `Blackboard Key` to `TargetActor`. The AI will now move directly towards the player it has found.</li>
+                        <li><strong>Task 2 (Optional):</strong> Add a <code class="code-block" style="display: inline-block; padding: 2px 5px;">Wait</code> task (e.g., 1 second) to simulate an "attack" cooldown.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Create the "Patrol" Branch using EQS:</strong>
+                    <p>To the main `Selector`, add another `Sequence` node to the right of the first one. This is the fallback behavior.</p>
+                    <ul>
+                        <li><strong>Task 1: Run EQS Query.</strong> Add the built-in <code class="code-block" style="display: inline-block; padding: 2px 5px;">Run EQS Query</code> task.
+                            <ul>
+                                <li>Set <strong>Query Template</strong> to your <code class="code-block" style="display: inline-block; padding: 2px 5px;">EQS_FindRandomPatrolPoint</code>.</li>
+                                <li>Set <strong>Blackboard Key</strong> to <code class="code-block" style="display: inline-block; padding: 2px 5px;">TargetLocation</code>. This task will run our query and store the best point in the Blackboard.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Task 2: Move To.</strong> Add a <code class="code-block" style="display: inline-block; padding: 2px 5px;">Move To</code> task that reads from the <code class="code-block" style="display: inline-block; padding: 2px 5px;">TargetLocation</code> key.</li>
+                        <li><strong>Task 3: Wait.</strong> Add a <code class="code-block" style="display: inline-block; padding: 2px 5px;">Wait</code> task (e.g., 3 seconds) before finding a new patrol point.</li>
+                    </ul>
+                </li>
             </ol>
         </div>
-    </div>
+
+        <!-- Module 5: Advanced Integration & Final Tree -->
+        <div class="module">
+            <h2>Module 5: Advanced Integration & Final Tree</h2>
+            <p>Now, let's combine everything and add the "Find Cover" logic for a more intelligent AI.</p>
+            
+            <h3>Part A: Creating the Cover Query</h3>
+            <ol class="task-list">
+                <li>
+                    <strong>Create `EQS_FindCover` Asset:</strong>
+                    <p>Create a new EQS query named `EQS_FindCover`. This will find a point that is hidden from the player.</p>
+                </li>
+                <li>
+                    <strong>Configure Generator and Tests:</strong>
+                    <ul>
+                        <li><strong>Generator:</strong> `Points: On Circle`. Radius ~2000.</li>
+                        <li><strong>Test 1: Trace.</strong> This is the most important test. We want to find a point that does <strong>not</strong> have line of sight to the player.
+                            <ul>
+                                <li>Set <strong>Context</strong> to "Items" (the generated points).</li>
+                                <li>Set <strong>Trace To</strong> to a context referencing the Player. You'll need to create a new Blackboard key for the EQS to get this context. In `BB_Enemy`, create a new key named `PlayerActor_EQSContext` of type Actor. In the `BTS_CheckForPlayer` service, set this key at the same time you set `TargetActor`.</li>
+                                <li>In the Trace test, set <strong>Test Purpose</strong> to `Filter Only` and enable <strong>Invert</strong>. This will discard any points that CAN see the player.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Test 2: Distance.</strong> Set this to score points that are a medium distance from the `PlayerActor_EQSContext` higher. We don't want to hide right next to the player or too far away.</li>
+                        <li><strong>Test 3: Pathfinding.</strong> As always, ensure the AI can reach the point.</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <h3>Part B: The Final Behavior Tree</h3>
+            <p>We will now restructure our tree for the final, more intelligent logic: "If I see a player, run for cover. If I don't see a player, patrol."</p>
+
+            <div class="code-block">
+Root
+└── Selector (with BTS_CheckForPlayer Service)
+    ├── Sequence (Flee to Cover)
+    │   ├── Decorator: Blackboard (TargetActor Is Set)
+    │   ├── Task: Run EQS Query (EQS_FindCover -> sets TargetLocation)
+    │   ├── Task: Wait (0.2s, gives EQS time to process)
+    │   └── Task: Move To (TargetLocation)
+    └── Sequence (Patrol)
+        ├── Task: Run EQS Query (EQS_FindRandomPatrolPoint -> sets TargetLocation)
+        ├── Task: Move To (TargetLocation)
+        └── Task: Wait (3s)
+            </div>
+
+            <div class="important-note">
+                <strong>Congratulations!</strong> You have now built a robust AI where every major decision about "where to go" is handled by the Environment Query System. The Behavior Tree simply orchestrates *when* to ask these questions and what to do with the answers. This is a highly modular, debuggable, and scalable approach to AI development in Unreal Engine.
+            </div>
+        </div>
 
 
     <footer class="site-footer" style="font-size: 0.9em; color: #661; margin-top: 2em; padding-top: 1em; border-top: 1px solid #ccc;">
