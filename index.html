@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Birthday Experience</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg-color: #121212;
+            --text-color: #E0E0E0;
+            --accent-color: #BB86FC;
+            --narrator-color: #03DAC6;
+            --red-button: #CF6679;
+            --red-button-hover: #e08c9c;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Roboto Mono', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            padding: 2rem;
+            border: 1px solid var(--text-color);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(187, 134, 252, 0.1);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        h1, h2 {
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+
+        .narrator-box {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: rgba(3, 218, 198, 0.05);
+            border-left: 4px solid var(--narrator-color);
+            text-align: left;
+            font-style: italic;
+            min-height: 50px;
+        }
+
+        .narrator-box p {
+            margin: 0;
+            color: var(--narrator-color);
+        }
+
+        .button-container {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background-color: transparent;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+            padding: 1rem 2rem;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        button:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        #red-button {
+            background-color: var(--red-button);
+            border-color: var(--red-button);
+            color: var(--bg-color);
+            font-weight: 700;
+        }
+        #red-button:hover {
+            background-color: var(--red-button-hover);
+            border-color: var(--red-button-hover);
+        }
+
+        #final-gift img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            background-color: #333;
+            border-radius: 5px;
+            margin-top: 1rem;
+        }
+        
+        #progress-bar {
+            width: 0%;
+            height: 30px;
+            background-color: var(--narrator-color);
+            border-radius: 5px;
+            text-align: center;
+            line-height: 30px;
+            color: var(--bg-color);
+            font-weight: bold;
+            transition: width 0.5s ease-in-out;
+        }
+
+        /* Glitch Effect */
+        .glitch {
+            animation: glitch-animation 1s infinite;
+        }
+
+        @keyframes glitch-animation {
+            0% { transform: translate(0); }
+            20% { transform: translate(-5px, 5px); }
+            40% { transform: translate(-5px, -5px); }
+            60% { transform: translate(5px, 5px); }
+            80% { transform: translate(5px, -5px); }
+            100% { transform: translate(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container" id="main-container">
+
+        <!-- Scene 1: The Start -->
+        <div id="scene-start">
+            <h1 id="start-title">A Birthday.</h1>
+            <div class="button-container">
+                <button id="start-btn">Begin.</button>
+            </div>
+        </div>
+
+        <!-- Scene 2: The Choice of Doors -->
+        <div id="scene-doors" class="hidden">
+            <h2>The First Choice</h2>
+            <p>Your gift, a testament to your continued successful orbit around a star, awaits. It is behind one of these "doors." Choose wisely. Or don't. The outcome is statistically predetermined anyway.</p>
+            <div class="button-container">
+                <button id="door-left">A Plain Door</button>
+                <button id="door-right">An Ornate Door</button>
+            </div>
+        </div>
+        
+        <!-- Scene 3: The Introspection -->
+        <div id="scene-introspection" class="hidden">
+            <h2>A Moment of Reflection</h2>
+            <p>Before you receive your... reward... it's time for mandatory introspection. Please take a moment to consider the relentless, crushing march of time that turns all youthful dreams to nostalgic dust. Contemplate your own mortality.</p>
+            <div class="button-container">
+                <button id="contemplate-btn">I have sufficiently contemplated.</button>
+            </div>
+        </div>
+        
+        <!-- Scene 4: The Red Button -->
+        <div id="scene-red-button" class="hidden">
+            <h2>A Simple Instruction</h2>
+            <p>Alright, we're almost there. One final, very important calibration is required. A button will appear below. Do <strong>NOT</strong> press it. I am deadly serious. Pressing it would destabilize the entire Congratulatory Matrix. Just wait for 10 seconds.</p>
+            <div class="button-container">
+                <button id="red-button" class="hidden">DO NOT PRESS</button>
+            </div>
+        </div>
+        
+        <!-- Scene 5: The Glitch (if red button pressed) -->
+        <div id="scene-glitch" class="hidden">
+            <h2 class="glitch">S Y S T E M - E R R O R</h2>
+            <p id="glitch-text">W h a t _ h a v e _ y o u _ d o n e ?</p>
+        </div>
+
+        <!-- Scene 6: The "Gift" -->
+        <div id="scene-gift-progress" class="hidden">
+            <h2>Your "Gift"</h2>
+            <p>Fine. Whatever. You broke it. Or you waited patiently like a good little user. Either way, the process is ruined. Here. Just take it.</p>
+            <div class="button-container">
+                <button id="open-gift-btn">Unwrap Your Predestined Digital Artefact</button>
+            </div>
+            <div id="progress-container" class="hidden">
+                <p id="progress-label">Unpacking joy.exe... Please wait.</p>
+                <div class="progress-bar-container">
+                    <div id="progress-bar">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 7: The Final Reveal -->
+        <div id="scene-final" class="hidden">
+            <h2 id="final-header">Okay, For Real Though.</h2>
+            <p id="final-message">All the sarcasm and fourth-wall-breaking aside... you're pretty great. The world is objectively a better, funnier, and smarter place for having you in it for another year.</p>
+            <p>So, seriously,</p>
+            <h1>Happy Birthday, <span id="birthday-name"></span>!</h1>
+            <div id="final-gift">
+
+                <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMGZhYXVzaGtwaHd4czRpMWIwaGEwNWJjajB1czJya2E0azl5MWMweSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/arGdCUFTYzs2c/giphy.gif" alt="A cat wearing a party hat looking slightly confused.">
+            </div>
+        </div>
+
+
+        <div class="narrator-box">
+            <p id="narrator-text">Awaiting input...</p>
+        </div>
+
+    </div>
+
+    <script>
+
+
+        const birthdayPersonName = "Brittany";
+
+        const scenes = {
+            start: document.getElementById('scene-start'),
+            doors: document.getElementById('scene-doors'),
+            introspection: document.getElementById('scene-introspection'),
+            redButton: document.getElementById('scene-red-button'),
+            glitch: document.getElementById('scene-glitch'),
+            giftProgress: document.getElementById('scene-gift-progress'),
+            final: document.getElementById('scene-final')
+        };
+        const narratorText = document.getElementById('narrator-text');
+        const mainContainer = document.getElementById('main-container');
+
+        // State
+        let redButtonTimer;
+
+        // --- Utility Functions ---
+
+        function showScene(sceneName) {
+            Object.values(scenes).forEach(scene => scene.classList.add('hidden'));
+            scenes[sceneName].classList.remove('hidden');
+        }
+
+        function narrate(text, delay = 1000) {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    narratorText.textContent = text;
+                    resolve();
+                }, delay);
+            });
+        }
+        
+        function setBirthdayName() {
+            document.getElementById('birthday-name').textContent = birthdayPersonName;
+            document.getElementById('start-title').textContent = `A Birthday for ${birthdayPersonName}.`;
+        }
+
+        // --- Scene Logic ---
+
+        // Scene 1: Start
+        document.getElementById('start-btn').addEventListener('click', async () => {
+            await narrate("Ah, so you've decided to participate. How brave. Or perhaps just bored. Let's begin this... 'experience'.");
+            await narrate("The person who sent you this clearly has a high opinion of your ability to click buttons. Let's not disappoint them.", 2500);
+            showScene('doors');
+        });
+
+        // Scene 2: Doors
+        document.getElementById('door-left').addEventListener('click', async () => {
+            await narrate("The plain door. A humble choice. You're trying to signal that you're above such trivialities as 'aesthetics'. Very clever.");
+            await narrate("Or maybe it was just closer to your mouse cursor. We'll never know for sure.", 3000);
+            showScene('introspection');
+        });
+
+        document.getElementById('door-right').addEventListener('click', async () => {
+            await narrate("The ornate door. Ooh, shiny. Drawn to the fancy object, are we? A predictable, if entirely human, response.");
+            await narrate("I'm sure this says something deep and meaningful about your personality. Probably.", 3000);
+            showScene('introspection');
+        });
+
+        // Scene 3: Introspection
+        document.getElementById('contemplate-btn').addEventListener('click', async () => {
+            await narrate("Excellent. You have stared into the abyss for the prescribed duration. The abyss, for its part, was moderately impressed.");
+            await narrate("Now for the most critical part of this entire charade.", 2500);
+            showScene('redButton');
+            // Show the red button after a delay
+            setTimeout(() => {
+                document.getElementById('red-button').classList.remove('hidden');
+            }, 5000);
+            // Set a timer to advance if the user is obedient
+            redButtonTimer = setTimeout(handleObedientUser, 24000); // 20 seconds for user + 2 for button to appear
+        });
+
+        // Scene 4: Red Button
+        function handleObedientUser() {
+            narrate("Still here? You didn't press it. Remarkable self-control. Or perhaps you just went to get a snack. I'm choosing to be disappointed either way.").then(() => {
+                setTimeout(() => showScene('giftProgress'), 2000);
+            });
+        }
+        
+        document.getElementById('red-button').addEventListener('click', async () => {
+            clearTimeout(redButtonTimer); // Stop the "obedient" path
+            mainContainer.classList.add('glitch');
+            showScene('glitch');
+            
+            await narrate("You pressed it. You actually pressed it. I gave you one, simple, explicit instruction.", 2000);
+            await narrate("Do you just go around pressing every button you see? How do you even function in modern society?", 300);
+            document.getElementById('glitch-text').textContent = "RECALIBRATING CONGRATULATORY PARAMETERS...";
+            await narrate("Now I have to reboot the whole system. I hope you're happy. This is coming out of the 'sincerity' budget.", 3000);
+            
+            mainContainer.classList.remove('glitch');
+            showScene('giftProgress');
+        });
+
+        // Scene 6: Gift Progress
+        document.getElementById('open-gift-btn').addEventListener('click', () => {
+            document.getElementById('open-gift-btn').classList.add('hidden');
+            document.getElementById('progress-container').classList.remove('hidden');
+            
+            narrate("Fine. Unpacking... Please note that the perceived duration of this process is directly proportional to your impatience.", 2000);
+            
+            const progressBar = document.getElementById('progress-bar');
+            const progressLabel = document.getElementById('progress-label');
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    narrate("Unpacking complete. Try not to break this one.", 1000).then(() => {
+                         setTimeout(() => showScene('final'), 1000);
+                    });
+                } else {
+                    width++;
+                    progressBar.style.width = width + '%';
+                    progressBar.textContent = width + '%';
+                    
+                    if (width === 25) progressLabel.textContent = "Defragmenting well-wishes...";
+                    if (width === 50) progressLabel.textContent = "Compressing existential dread...";
+                    if (width === 75) progressLabel.textContent = "Reticulating splines...";
+                }
+            }, 80); // Adjust speed of progress bar here (lower is faster)
+        });
+        
+        // Scene 7: Final
+        // This scene is the end, no more actions. The final narrator line is a nice touch.
+        scenes.final.addEventListener('transitionend', () => {
+            narrate("There. Are you happy now? My work is done. Don't touch anything else.", 2000);
+        });
+
+        // Initial setup
+        window.onload = () => {
+            setBirthdayName();
+            showScene('start');
+            narrate("A new program has been initiated. Its purpose: a birthday greeting. How... quaint.");
+        };
+
+    </script>
+</body>
+</html>
