@@ -1,0 +1,9 @@
+{
+  "name": "Beat Saber Guardian",
+  "short_name": "BS Guardian",
+  "start_url": "https://fort-bonnitar.github.io/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#3b82f6",
+  "icons": [{ "src": "icon.png", "sizes": "512x512", "type": "image/png" }]
+}
