@@ -2,93 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Beat Saber Guardian | Modding Session Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BS Guardian | Safety Harness</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
 </head>
-<body>
+<body class="theme-dark">
     <div id="app-container">
-        <!-- Sidebar: Session Info -->
-        <aside id="sidebar">
-            <div class="logo">🛡️ Guardian</div>
-            <div id="session-info">
-                <div class="stat"><label>Status:</label> <span id="status-dot">●</span> <span id="status-text">Disconnected</span></div>
-                <div class="stat"><label>Headset:</label> <span id="quest-model">---</span></div>
-                <div class="stat"><label>BS Version:</label> <span id="bs-version">---</span></div>
+        <nav class="glass-header">
+            <div class="logo">BS <span>GUARDIAN</span></div>
+            <div id="connection-badge" class="badge disconnected">DISCONNECTED</div>
+        </nav>
+
+        <main class="dashboard">
+            <!-- Connection Section -->
+            <section class="card-hero">
+                <div class="hero-content">
+                    <h1>Ready for Modding?</h1>
+                    <p>Secure your saves and high scores before modifying your game files.</p>
+                    <button id="btn-connect" class="btn-primary-glow">INITIALIZE QUEST LINK</button>
+                </div>
+            </section>
+
+            <!-- Action Grid -->
+            <div class="action-grid disabled" id="main-controls">
+                <!-- Modding Safety Panel -->
+                <div class="card glass">
+                    <div class="card-header">🛡️ Safety Harness</div>
+                    <div class="card-body">
+                        <button id="btn-prepare" class="btn-action">CREATE SNAPSHOT & MOD</button>
+                        <ul class="process-steps">
+                            <li id="step-1" class="pending">Snapshot UserData</li>
+                            <li id="step-2" class="pending">Verify Integrity</li>
+                            <li id="step-3" class="pending">Handoff to MBF</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Recovery Panel -->
+                <div class="card glass">
+                    <div class="card-header">🔄 Fast Restore</div>
+                    <div class="card-body flex-col">
+                        <button class="btn-outline" onclick="guardian.restore('latest')">Restore Latest Save</button>
+                        <button class="btn-outline" onclick="guardian.downloadBackup()">Archive to PC (.zip)</button>
+                    </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="card danger">
+                    <div class="card-header">☢️ Emergency Recovery</div>
+                    <p>Game crashing? This will factory reset app data and restore your latest backup.</p>
+                    <button id="btn-emergency" class="btn-danger">FIX MY GAME</button>
+                </div>
             </div>
-            <nav id="history-list">
-                <h3>Snapshot History</h3>
-                <div id="snapshots-container">
-                    <p class="empty">No snapshots found.</p>
-                </div>
-            </nav>
-        </aside>
 
-        <!-- Main Content -->
-        <main id="dashboard">
-            <header id="main-header">
-                <h1>Modding Safety Harness</h1>
-                <div id="connection-controls">
-                    <button id="btn-connect" class="btn-primary">Connect Quest</button>
+            <!-- Terminal Output -->
+            <section class="terminal-container">
+                <div class="terminal-header"><span>SYSTEM_LOG</span><span id="speed-indicator"></span></div>
+                <div id="terminal" class="terminal-body">
+                    <div class="log-entry system">Awaiting device connection...</div>
                 </div>
-            </header>
-
-            <!-- State 1: Ready to Mod -->
-            <section id="state-ready" class="state-view hidden">
-                <div class="hero-card">
-                    <h2>Ready to Mod?</h2>
-                    <p>Start a "Prepare for Modding" session. We'll create a verified snapshot, index your data, and get you ready for MBF.</p>
-                    <button id="btn-prepare" class="btn-hero">🛡️ Prepare for Modding</button>
-                </div>
-                <div class="grid-tools">
-                    <div class="tool-card" id="tool-diagnose">
-                        <h3>⚕️ Diagnose</h3>
-                        <p>Check installation integrity.</p>
-                    </div>
-                    <div class="tool-card" id="tool-backup">
-                        <h3>🎵 Quick Backup</h3>
-                        <p>Save scores & settings.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- State 2: Welcome Back (Post-MBF) -->
-            <section id="state-recovery" class="state-view hidden">
-                <div class="recovery-hero">
-                    <h2>Welcome Back! 👋</h2>
-                    <p>We detected a snapshot from <span id="snap-time">--</span>. Compare and restore your data below.</p>
-                    <div id="comparison-report">
-                        <!-- Data injected by JS -->
-                    </div>
-                    <div class="recovery-actions">
-                        <button id="btn-restore-full" class="btn-success">Restore Everything</button>
-                        <button id="btn-restore-data" class="btn-outline">Restore Scores & Settings Only</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Terminal / Logs -->
-            <section id="terminal-panel">
-                <div class="term-header">
-                    <span>System Diagnostics</span>
-                    <button id="btn-export-logs">Export Report</button>
-                </div>
-                <div id="log-output"></div>
             </section>
         </main>
     </div>
-
-    <!-- UI Overlays -->
-    <div id="modal-handoff" class="modal hidden">
-        <div class="modal-content">
-            <h2>Handoff in Progress</h2>
-            <div class="loader"></div>
-            <p>Verification successful. Snapshot created and hashed.</p>
-            <p class="warning">We are now releasing the USB connection so <strong>Mods Before Friday</strong> can take control.</p>
-            <button id="btn-open-mbf" class="btn-primary">Open Mods Before Friday</button>
-        </div>
-    </div>
-
-    <script type="module" src="js/main.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
